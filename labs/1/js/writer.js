@@ -9,19 +9,29 @@ function createTextAreaContainer() {
 
 function saveNotes() {
   const textareas = document.querySelectorAll('textarea')
-  const notes = []
+  const mainDiv = document.getElementById('main')
+  const currentNotes = []
   textareas.forEach(textarea => {
-    notes.push(new Note(textarea.value))
+    currentNotes.push(new Note(textarea.value, mainDiv))
   })
+  const storedJSONnotes = JSON.parse(localStorage.getItem('notes'))
 
-  const JSONnotes = JSON.stringify(notes)
-
-  if (JSONnotes !== localStorage.getItem('notes')) {
-    localStorage.setItem('notes', JSONnotes)
+  if (!notesValueEqual(currentNotes, storedJSONnotes)) {
+    localStorage.setItem('notes', JSON.stringify(currentNotes))
     const lastSavedTime = new Date().toLocaleTimeString()
     document.getElementById('lastSavedTime').textContent = lastSavedTime
   }
 
+}
+
+function notesValueEqual(a, b){
+  const firstContent = a.map(note => note.value)
+  const secondContent = b.map(note => note.value)
+  
+  firstContent.sort()
+  secondContent.sort()
+
+  return firstContent.every((value, index) => value === secondContent[index])
 }
 
 function loadNotes() {
