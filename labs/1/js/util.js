@@ -1,12 +1,12 @@
-export function getLocalSotrageItemAsObject(key){
+export function getLocalSotrageItemAsObject(key) {
   const savedItem = localStorage.getItem(key)
-  if (savedItem){
+  if (savedItem) {
     return JSON.parse(savedItem)
   } else return null
 }
 
-export function notesValueEqual(a, b){
-  if (!a || !b){
+export function notesValueEqual(a, b) {
+  if (!a || !b) {
     return false
   }
 

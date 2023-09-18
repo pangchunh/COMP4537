@@ -1,4 +1,4 @@
-import {getLocalSotrageItemAsObject, notesValueEqual} from './util.js'
+import { getLocalSotrageItemAsObject, notesValueEqual } from './util.js'
 import Note from './note.js'
 
 function createTextAreaContainer() {
@@ -9,6 +9,11 @@ function createTextAreaContainer() {
 
 function saveNotes() {
   const textareas = document.querySelectorAll('textarea')
+
+  if (textareas.length === 0) {
+    localStorage.setItem('notes', JSON.stringify([]))
+  }
+
   const mainDiv = document.getElementById('main')
   const currentNotes = []
   textareas.forEach(textarea => {
@@ -20,9 +25,14 @@ function saveNotes() {
   if (!notesValueEqual(currentNotes, storedJSONnotes)) {
     localStorage.setItem('notes', currentJSONnotes)
     const lastSavedTime = new Date().toLocaleTimeString()
-    document.getElementById('lastSavedTime').textContent = lastSavedTime
-    localStorage.setItem('lastSavedTime', lastSavedTime)
+    updateLastSavedTime(lastSavedTime)
   }
+
+}
+
+function updateLastSavedTime(time) {
+  document.getElementById('lastSavedTime').textContent = time
+  localStorage.setItem('lastSavedTime', time)
 
 }
 
@@ -37,11 +47,11 @@ function loadNotes() {
   }
 }
 
-function initializePage(){
+function initializePage() {
   const addBtn = document.getElementById('add')
   addBtn.addEventListener('click', createTextAreaContainer)
   const savedNotes = getLocalSotrageItemAsObject('notes')
-  if (savedNotes){
+  if (savedNotes) {
     savedNotes.map(note => {
       createTextAreaContainer()
       const textareas = document.querySelectorAll('textarea')
@@ -50,7 +60,7 @@ function initializePage(){
       document.getElementById('lastSavedTime').textContent = localStorage.getItem('lastSavedTime')
 
     })
-  } else{
+  } else {
     createTextAreaContainer()
   }
 }
