@@ -16,6 +16,5 @@ export function notesValueEqual(a, b){
   firstContent.sort()
   secondContent.sort()
 
-  console.log(firstContent.every((value, index) => value === secondContent[index]))
   return firstContent.every((value, index) => value === secondContent[index])
 }
