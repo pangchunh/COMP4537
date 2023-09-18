@@ -1,4 +1,4 @@
-import getLocalSotrageItemAsString from './util.js'
+import {getLocalSotrageItemAsObject} from './util.js'
 
 function displayNotesInReader(){
   const noteElements = document.getElementsByClassName('note')
@@ -9,7 +9,7 @@ function displayNotesInReader(){
     }
   }
 
-  const savedNotes = getLocalSotrageItemAsString('notes')
+  const savedNotes = getLocalSotrageItemAsObject('notes')
   const savedNotesValue = savedNotes.map(note => note.value)
   if (JSON.stringify(currentNotes) !== JSON.stringify(savedNotesValue)){
     appendNoteContent(savedNotesValue)
@@ -17,7 +17,7 @@ function displayNotesInReader(){
 }
 
 function initializePage(){
-  const savedNotes = getLocalSotrageItemAsString('notes')
+  const savedNotes = getLocalSotrageItemAsObject('notes')
   const savedNotesValue = savedNotes.map(note => note.value)
   appendNoteContent(savedNotesValue)
 }

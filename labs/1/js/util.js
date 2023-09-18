@@ -1,6 +1,21 @@
-export default function getLocalSotrageItemAsString(key){
+export function getLocalSotrageItemAsObject(key){
   const savedItem = localStorage.getItem(key)
   if (savedItem){
     return JSON.parse(savedItem)
   } else return null
+}
+
+export function notesValueEqual(a, b){
+  if (!a || !b){
+    return false
+  }
+
+  const firstContent = a.map(note => note.value)
+  const secondContent = b.map(note => note.value)
+
+  firstContent.sort()
+  secondContent.sort()
+
+  console.log(firstContent.every((value, index) => value === secondContent[index]))
+  return firstContent.every((value, index) => value === secondContent[index])
 }
