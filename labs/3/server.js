@@ -8,7 +8,20 @@ const server = http.createServer((req, res) => {
   if (req.url.startsWith('/getDate')) {
     res.writeHead(200, { 'Content-Type': 'text/html' })
     const name = q.query.name ? q.query.name : 'empty'
-    res.write(`Hello ${name}, What a beautiful day. Server current date and time is ${util.date()}`)
+    const responseText = 
+    `<html>
+      <head>
+        <style>
+          body {
+            color: blue;
+          }
+        </style>
+        <body>
+        Hello ${name}, What a beautiful day. Server current date and time is ${util.date()}
+        </body>
+      </head>
+    </html>`
+    res.write(responseText)
   } else if (req.url.startsWith('/writeFile')) {
     if (!q.query.text) {
       res.writeHead(404, { 'Content-Type': 'text' })
