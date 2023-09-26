@@ -5,7 +5,7 @@ const util = require('./modules/util')
 const server = http.createServer((req, res) => {
   const q = url.parse(req.url, true)
 
-  if (req.url.startsWith('/getDate/')) {
+  if (req.url.startsWith('/getDate')) {
     res.writeHead(200, { 'Content-Type': 'text/html' })
     const name = q.query.name ? q.query.name : 'empty'
     res.write(`Hello ${name}, What a beautiful day. Server current date and time is ${util.date()}`)
@@ -18,7 +18,18 @@ const server = http.createServer((req, res) => {
       res.writeHead(200, { 'Content-Type': 'text/html' })
       res.write(`Successfully appended ${q.query.text} to file.txt`)
     }
-  } else {
+  } else if(req.url.startsWith('/readFile')){
+    const fileName = q.pathname.split('/').pop()
+    const content = util.readFile(fileName)
+    if (content.error){
+      res.writeHead(404, {'Content-Type': 'text/html'})
+      res.write('Error when reading file.')
+    }
+    console.log(content)
+    res.writeHead(200, { 'Content-Type': 'text/html' })
+    res.write(`${content}`)
+  } 
+  else {
     res.writeHead(404, { 'Content-Type': 'text/html' })
     res.write(`Error 404 not found`)
   }
