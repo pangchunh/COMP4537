@@ -69,7 +69,7 @@ function initializePage() {
 initializePage()
 
 setInterval(saveNotes, 2000)
-setInterval(loadNotes, 2000)
+// setInterval(loadNotes, 2000)
 
 
 

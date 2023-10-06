@@ -1,24 +1,24 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-  <title>Lab 4 Chun & Cody - store</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dictionary - Store Definition</title>
 </head>
 
 <body>
-  <h1>Lab 4 Chun & Cody - Store Words</h1>
-  <div id="input_word">
-    <div>Word</div>
-    <textarea></textarea>
-  </div>
-  <div id="input_definition">
-    <div>Definition</div>
-    <textarea></textarea>
-  </div>
-  <div>
-    <button id="Submit">Submit</button>
-  </div>
-  
+    <h1>Create and Store Definition</h1>
+    <form id="storeForm">
+        <label for="word">Word:</label>
+        <input type="text" id="word" required><br><br>
+        <label for="definition">Definition:</label>
+        <textarea id="definition" required></textarea><br><br>
+        <button type="submit">Submit</button>
+    </form>
+    <div id="feedback"></div>
+
+    <script src="./frontend/js/store.js"></script>
 </body>
 
 </html>
