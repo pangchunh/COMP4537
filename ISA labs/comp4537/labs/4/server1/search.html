@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dictionary - Search Definition</title>
+</head>
+<body>
+    <h1>Search Definition</h1>
+    <form id="searchForm">
+        <label for="searchWord">Search Word:</label>
+        <input type="text" id="searchWord" required><br><br>
+        <button type="submit">Search</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        const searchForm = document.getElementById('searchForm');
+        const result = document.getElementById('result');
+
+        searchForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const searchWord = document.getElementById('searchWord').value;
+
+            fetch(`https://yourDomainName2.wyz*/api/definitions?word=${searchWord}`)
+            .then((response) => {
+                if (response.status === 404) {
+                    return response.text();
+                }
+                return response.json();
+            })
+            .then((data) => {
+                if (typeof data === 'string') {
+                    result.textContent = data;
+                } else {
+                    result.textContent = `Word: ${data.word}\nDefinition: ${data.definition}`;
+                }
+            })
+            .catch((error) => {
+                result.textContent = 'Error: ' + error.message;
+            });
+        });
+    </script>
+</body>
+</html>
