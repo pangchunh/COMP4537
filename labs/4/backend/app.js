@@ -39,7 +39,7 @@ const server = http.createServer((req, res) => {
           } else {
             dictionary.push(postBody)
             res.statusCode = 200
-            res.end(`Definition received, word: ${postBody.word}, definition: ${postBody.definition}`)
+            res.end(`Request #${dictionary.length}: New entry recorded, word: ${postBody.word}, definition: ${postBody.definition}`)
           }
         })
       } catch (e) {
