@@ -1,4 +1,4 @@
-const host = 'http://localhost:3000'
+const host = 'https://chuncodylab5.onrender.com'
 
 
 document.getElementById('insertButton').addEventListener('click', async () => {
