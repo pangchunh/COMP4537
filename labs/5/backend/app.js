@@ -1,4 +1,3 @@
-const { error } = require('console')
 const db = require('../db/index')
 const http = require('http')
 const url = require('url')
@@ -23,7 +22,6 @@ async function testOtherOps() {
 async function executeQuery(query) {
   try {
     const result = await db.query(query)
-    console.log(result.rows)
     return result.rows
 
   } catch (err) {
@@ -38,48 +36,41 @@ const server = http.createServer(async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-
-  if (parsedUrl.pathname.startsWith === '/query') {
+  if (parsedUrl.pathname.startsWith('/query')) {
     res.setHeader('Content-Type', 'application/json')
     if (req.method === 'GET') {
-      try {
-        //get the query and execute it
-        const query = req.query.dbquery
+      try {        
+        const query = parsedUrl.query.dbquery
         const result = await executeQuery(query)
-
-
+        res.statusCode = 200
+        res.end(JSON.stringify({result}))
       } catch (err) {
+        res.end(JSON.stringify({err}))
 
       }
 
-
-    } else if (req.method === 'POST') {
-      let reqBody = ""
+    } else{
+      let reqBody = ''
       req.on('data', (chunk) => {
         reqBody += chunk
       })
-      try {
-        const postBody = JSON.parse(reqBody)
-
-        const result = executeQuery(postBody)
-      } catch (err) {
-        console.log(err)
-
-      }
-      //parse body and execute body
-    } else {
-      //method not allowed.
-    }
-
-
+      req.on('end', async()=>{
+        const result = await executeQuery(reqBody)
+        res.statusCode = 200
+        res.end(JSON.stringify({result}))
+      })
+      
+    } 
   } else if (parsedUrl.pathname === '/insert') {
     res.setHeader('Content-Type', 'application/json')
     const query = `INSERT INTO patient(name, dateofbirth)
-    values
+    VALUES
     ('Sara Brown', '1901-01-01'),
     ('John Smith', '1941-01-01'),
     ('Jack Ma', '1961-01-30'),
-    ('Elon Musk', '1999-01-01')`
+    ('Elon Musk', '1999-01-01')
+    RETURNING *`
+    
 
     try {
       const result = await executeQuery(query)

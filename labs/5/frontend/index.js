@@ -2,24 +2,29 @@ const host = 'http://localhost:3000'
 
 
 document.getElementById('insertButton').addEventListener('click', async () => {
-  console.log('inserted button clicked')
-  const query = document.getElementById('queryTextarea').value;
-  const response = await fetch(`${host}/insert`, { method: 'POST', body: JSON.stringify(query)});
+  const response = await fetch(`${host}/insert`, { method: 'POST'});
   const data = await response.json();
 
-  document.getElementById('response').innerText = `Result: ${JSON.stringify(data)}`;
+  document.getElementById('response').innerText = `Result: ${JSON.stringify(data.result)}`;
 });
 
 document.getElementById('submitButton').addEventListener('click', async () => {
   const query = document.getElementById('queryTextarea').value;
-  const method = query.toLowerCase().startsWith('select') ? 'GET' : 'POST';
-  const response = await fetch(`${host}/query`, {
-      method: method,
-      body: JSON.stringify({ query }),
+  if (query.toLowerCase().startsWith('select')){
+    const response = await fetch(`${host}/query/?dbquery=${query}`, {
+      method: 'GET',
+    })
+    const data = await response.json()
+    document.getElementById('response').innerText = JSON.stringify(data.result);
+  } else{
+    const response = await fetch(`${host}/query`, {
+      method: 'POST',
+      body: query,
       headers: {
-          'Content-Type': 'application/json'
+        'Content-Type': 'application/json'
       }
-  });
-  const data = await response.text();
-  document.getElementById('response').innerText = data;
+    })
+    const data = await response.json()
+    document.getElementById('response').innerText = JSON.stringify(data.result);
+  }
 });
