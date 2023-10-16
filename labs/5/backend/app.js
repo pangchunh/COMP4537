@@ -34,7 +34,7 @@ async function executeQuery(query) {
 const server = http.createServer(async (req, res) => {
   const parsedUrl = url.parse(req.url, true);
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   if (parsedUrl.pathname.startsWith('/query')) {
     res.setHeader('Content-Type', 'application/json')
@@ -49,7 +49,7 @@ const server = http.createServer(async (req, res) => {
 
       }
 
-    } else{
+    } else if (req.method === 'POST') {
       let reqBody = ''
       req.on('data', (chunk) => {
         reqBody += chunk
@@ -59,8 +59,10 @@ const server = http.createServer(async (req, res) => {
         res.statusCode = 200
         res.end(JSON.stringify({result}))
       })
-      
-    } 
+    } else{
+      res.statusCode = 400
+      res.end(JSON.stringify({'error':'Method not accepted.'}))
+    }
   } else if (parsedUrl.pathname === '/insert') {
     res.setHeader('Content-Type', 'application/json')
     const query = `INSERT INTO patient(name, dateofbirth)
