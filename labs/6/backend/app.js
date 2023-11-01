@@ -20,8 +20,6 @@ db.createTable(`CREATE TABLE IF NOT EXISTS language (
   PRIMARY KEY (code)
 )`)
 
-app.get("/", (req, res) => { });
-
 app.get("/api/v1/definition/:word", async (req, res) => {
   const word = req.params.word;
   const entry = {word}
@@ -91,33 +89,33 @@ app.post("/api/v1/definition", async (req, res) => {
       })
     }
   } catch (error) {
-    res.status(500).json({error, "message": "Error inserting into db", entry, total})
+    const {rows} = await db.query('SELECT COUNT(*) FROM dictionary')
+    const total = parseInt(rows[0].count)
+    res.status(500).json({"message": "Error inserting into db", error, entry, total})
   }
-
 });
 
-app.patch("/api/v1/definition/:word", (req, res) => {
+app.patch("/api/v1/definition/:word", async(req, res) => {
   //update the definition of an existing word in the database
   const word = req.params.word;
-  const language = req.body.language;
   const definition = req.body.definition;
-  const sql = `UPDATE dictionary SET defintion = ${definition}, language = ${language} 
-  WHERE word = ${word}`
-
-  const values = [word];
-  db.query(sql, values, (err, result) => {
-    // some unknonwn error
-    if (err) {
-      console.error("Error updating language and defintion:", err);
-      res.status(500).send("Error updating language and definition in the dictionary.")
+  const entry = {word, definition}
+  try{
+    const sql = `UPDATE dictionary SET definition = '${definition}'
+    where word = '${word}'`
+    const {rows} = await db.query(`SELECT COUNT(*) FROM dictionary`)
+    const total = rows[0].count
+    const {affectedRows} = await db.query(sql)
+    if(affectedRows === 1){
+      res.status(201).json({"message": "Update successful", entry, total})
+    } else{
+      res.status(404).json({"message": "Entry Not Found", "error": `The word ${word} does not exist in the dictionary.`, entry, total})
     }
-    // trying to update a word that doesn't already exist 
-    else if (result.affectedRows === 0) {
-      res.status(404).send("Word not found in the dictionary.");
-    } else {
-      res.send("Language and defintion updated successfully. SeemsGood");
-    }
-  })
+  }catch(error){
+    const {rows} = await db.query('SELECT COUNT(*) FROM dictionary')
+    const total = parseInt(rows[0].count)
+    res.status(500).json({"message": "Error updating entries", error, entry, total})
+  }
 });
 
 app.delete("/api/v1/definition/:word", async(req, res) => {
@@ -130,10 +128,10 @@ app.delete("/api/v1/definition/:word", async(req, res) => {
     const result = await db.query(sql)
     const {rows} = await db.query('SELECT COUNT(*) FROM dictionary')
     const total = parseInt(rows[0].count)
-    if (result.affectedRows === 0){
-      res.status(404).json({"message": "Entry Not Found", "error": `The word ${word} does not exist in the dictionary.`, entry, total})
-    } else{
+    if (result.affectedRows === 1){
       res.status(201).json({"message": "Delete successful", entry, total})
+    } else{
+      res.status(404).json({"message": "Entry Not Found", "error": `The word ${word} does not exist in the dictionary.`, entry, total})
     }
 
   }catch(error){
@@ -165,7 +163,6 @@ app.get("/api/v1/languages", async(req, res) => {
 
   }
   
-  //retrieves all languages that the user can select at time of new entry
 });
 
 app.listen(PORT, () => {
