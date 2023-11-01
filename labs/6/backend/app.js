@@ -13,6 +13,13 @@ db.createTable(`CREATE TABLE IF NOT EXISTS dictionary (
   definition_language varchar(50) NOT NULL,
   PRIMARY KEY (word))`);
 
+
+db.createTable(`CREATE TABLE IF NOT EXISTS language (
+  code varchar(50) NOT NULL,
+  name varchar(50) NOT NULL,
+  PRIMARY KEY (code)
+)`)
+
 app.get("/", (req, res) => { });
 
 app.get("/api/v1/definition/:word", async (req, res) => {
@@ -44,13 +51,30 @@ app.get("/api/v1/definition/:word", async (req, res) => {
 
 app.post("/api/v1/definition", async (req, res) => {
   const { word, definition, 'word-language': wordLanguage, 'definition-language': definitionLanguage } = req.body;
-  const entry = {word, definition, 'word-language': wordLanguage, 'definition-language': definitionLanguage}
+  const entry = {'word': word || '', 'definition': definition || '', 'word-language': wordLanguage || '', 'definition-language': definitionLanguage || ''}
+
+  const {rows} = await db.query(`SELECT COUNT(*) FROM dictionary`)
+  const total = parseInt(rows[0].count)
+
   try {
+    //chatgpt generated
+    if (!word || !definition || !wordLanguage || !definitionLanguage) {
+      const missingFields = [];
+      if (!word) missingFields.push('word');
+      if (!definition) missingFields.push('definition');
+      if (!wordLanguage) missingFields.push('word-language');
+      if (!definitionLanguage) missingFields.push('definition-language');
+
+      return res.status(400).json({
+        "message": `Entry missing {${missingFields.join(', ')}}`,
+        entry})
+    }
+    //end of chatgpt
+
     const sql = `SELECT * FROM dictionary WHERE word = '${word}'`;
     const existingWord = await db.query(sql)
-    if (existingWord.rowCount > 0) {
-      const {rows} = await db.query(`SELECT COUNT(*) FROM dictionary`)
-      const total = parseInt(rows[0].count)
+    
+    if (existingWord.rowCount > 0) {  
       res.status(409).json({"error": "Word Conflict", "message": `The word ${word} already exist`, entry, total})
     } else {
       const insert_query = `INSERT INTO dictionary(word, definition, word_language, definition_language)
@@ -67,8 +91,6 @@ app.post("/api/v1/definition", async (req, res) => {
       })
     }
   } catch (error) {
-    const {rows} = await db.query(`SELECT COUNT(*) FROM dictionary`)
-    const total = parseInt(rows[0].count)
     res.status(500).json({error, "message": "Error inserting into db", entry, total})
   }
 
@@ -76,7 +98,7 @@ app.post("/api/v1/definition", async (req, res) => {
 
 app.patch("/api/v1/definition/:word", (req, res) => {
   //update the definition of an existing word in the database
-  const word = req.body.word;
+  const word = req.params.word;
   const language = req.body.language;
   const definition = req.body.definition;
   const sql = `UPDATE dictionary SET defintion = ${definition}, language = ${language} 
@@ -98,25 +120,51 @@ app.patch("/api/v1/definition/:word", (req, res) => {
   })
 });
 
-app.delete("/api/v1/definition/:word", (req, res) => {
-  const word = req.body.word;
+app.delete("/api/v1/definition/:word", async(req, res) => {
+  const word = req.params.word;
+  const entry = {word}
   const sql = `DELETE FROM dictionary 
   WHERE word = ${word}`
 
-  const values = [word];
-  db.query(sql, values, (err, result) => {
-    if (err) {
-      console.error("Error deleting word:", err);
-      res.status(500).send("Error deleting word from the dictionary.");
-    } else if (result.affectedRows === 0) {
-      res.status(404).send("Word not found in the dictionary.")
-    } else {
-      res.send("Word deleted successfully.");
+  try {
+    const result = await db.query(sql)
+    const {rows} = await db.query('SELECT COUNT(*) FROM dictionary')
+    const total = parseInt(rows[0].count)
+    if (result.affectedRows === 0){
+      res.status(404).json({"message": "Entry Not Found", "error": `The word ${word} does not exist in the dictionary.`, entry, total})
+    } else{
+      res.status(201).json({"message": "Delete successful", entry, total})
     }
-  })
+
+  }catch(error){
+    const {rows} = await db.query('SELECT COUNT(*) FROM dictionary')
+    const total = parseInt(rows[0].count)
+    res.status(500).json({"message": "Error deleting entries", error, entry, total})
+
+  }
 });
 
-app.get("/api/v1/languages", (req, res) => {
+app.get("/api/v1/languages", async(req, res) => {
+  try{
+    const {rowCount, rows} = await db.query('SELECT * FROM language')
+    const total = rowCount
+    res.status(200).json({
+      "message": "Languages retrived",
+      rows,
+      total
+    })
+  } catch(error){
+    const {rowCount} = await db.query('SELECT * FROM language')
+    const total = rowCount
+    res.status(500).json({
+      "message": "Error retrieving languages",
+      error,
+      total
+    })
+
+
+  }
+  
   //retrieves all languages that the user can select at time of new entry
 });
 
