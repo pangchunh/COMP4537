@@ -1,10 +1,11 @@
 require('dotenv').config()
 const express = require("express");
+const cors = require('cors')
 const app = express();
 const PORT = process.env.PORT || 3000;
 const db = require("../db/index");
 
-app.use(express.json());
+app.use(express.json(), cors());
 
 db.createTable(`CREATE TABLE IF NOT EXISTS dictionary (
   word varchar(255) NOT NULL,
@@ -149,7 +150,7 @@ app.get("/api/v1/languages", async(req, res) => {
     res.status(200).json({
       "message": "Languages retrived",
       rows,
-      total
+      total,
     })
   } catch(error){
     const {rowCount} = await db.query('SELECT * FROM language')

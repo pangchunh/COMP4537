@@ -3,17 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dictionary - Search Definition</title>
+    <title id="searchTitle"></title>
 </head>
 <body>
-    <h1>Search Definition</h1>
+    <h1 id="searchHeader"></h1>
     <form id="searchForm">
-        <label for="searchWord">Search Word:</label>
+        <label id="searchWordLabel" for="searchWord"></label>
         <input type="text" id="searchWord" required><br><br>
-        <button type="submit">Search</button>
+        <button id="submitButton" type="submit"></button>
     </form>
     <div id="result"></div>
 
     <script src="./frontend/js/search.js" type="module"></script>
+    <script src="./frontend/js/strings.js" type="module"></script>
+
 </body>
 </html>

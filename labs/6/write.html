@@ -14,11 +14,15 @@
         <input type="text" id="word" required><br><br>
         <label for="definition">Definition:</label>
         <textarea id="definition" required></textarea><br><br>
-        <button type="submit">Submit</button>
+        <select names="wordLanguage" id="wordLanguage">
+
+        </select><br><br>
+        <select names="definitionLanguage" id="definitionLanguage"></select><br><br>
+        <button type="submit">Submit</button><br><br>
     </form>
     <div id="feedback"></div>
 
-    <script src="./frontend/js/store.js" type="module"></script>
+    <script src="./frontend/js/write.js" type="module"></script>
 </body>
 
 </html>
