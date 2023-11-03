@@ -39,22 +39,42 @@ storeForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const word = document.getElementById('word').value;
     const definition = document.getElementById('definition').value;
+    const wordLanguageSelect = document.getElementById('wordLanguage')
+    const wordLanguage = wordLanguageSelect.value
+    const definitionLanguageSelect = document.getElementById('definitionLanguage')
+    const definitionLanguage = definitionLanguageSelect.value
+    
 
     try{
       if (!validate(word)){
         throw new Error('Input word should not contain numbers or empty spaces')
       }
-      const res = await fetch(`${host}/api/definitions/`, {
+      const res = await fetch(`${host}/api/v1/definition/`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ word, definition })
+        body: JSON.stringify({ word, definition, 'word-language': wordLanguage, 'definition-language': definitionLanguage })
     })
-    const resText = await res.text()
-    feedback.textContent = resText
+
+
+    const resText = await res.json()
+    if (res.status === 409){
+      displayPatchForm(resText.message)
+    }
+    feedback.innerHTML = `Message: ${resText.message}<br>Entry:${resText.entry}<br>Total:${resText.total}`
     
     }catch(e){
       feedback.textContent = `Error: ${e.message}`
     }
 });
+
+
+
+
+function displayPatchForm(message){
+  const patchForm = document.getElementById('patchForm')
+  const patchMessage = document.getElementById('patchMessage')
+  patchForm.style.display = "block"
+  patchMessage.innerHTML = `${message}. Do you want to update the current entry?`
+}
