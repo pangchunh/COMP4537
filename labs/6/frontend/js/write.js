@@ -46,9 +46,9 @@ storeForm.addEventListener('submit', async (e) => {
     
 
     try{
-      if (!validate(word)){
-        throw new Error('Input word should not contain numbers or empty spaces')
-      }
+      // if (!validate(word)){
+      //   throw new Error('Input word should not contain numbers or empty spaces')
+      // }
       const res = await fetch(`${host}/api/v1/definition/`, {
         method: 'POST',
         headers: {
@@ -60,9 +60,9 @@ storeForm.addEventListener('submit', async (e) => {
 
     const resText = await res.json()
     if (res.status === 409){
-      displayPatchForm(resText.message)
+      displayPatchDiv(resText.message)
     }
-    feedback.innerHTML = `Message: ${resText.message}<br>Entry:${resText.entry}<br>Total:${resText.total}`
+    feedback.innerHTML = `Message: ${resText.message}<br>Entry:${JSON.stringify(resText.entry)}<br>Total: ${resText.total}`
     
     }catch(e){
       feedback.textContent = `Error: ${e.message}`
@@ -72,9 +72,43 @@ storeForm.addEventListener('submit', async (e) => {
 
 
 
-function displayPatchForm(message){
-  const patchForm = document.getElementById('patchForm')
+function displayPatchDiv(message){
+  const patchDiv = document.getElementById('patchDiv')
   const patchMessage = document.getElementById('patchMessage')
-  patchForm.style.display = "block"
+  patchDiv.style.display = "block"
   patchMessage.innerHTML = `${message}. Do you want to update the current entry?`
 }
+
+const confirmPatchBtn = document.getElementById('confirmPatch')
+const declinePatchBtn = document.getElementById('declinePatch')
+
+confirmPatchBtn.onclick = submitPatchReq
+declinePatchBtn.onclick = declinePatchReq
+
+async function submitPatchReq(){
+  try{
+    const word = document.getElementById('word').value;
+    const definition = document.getElementById('definition').value;
+    const res = await fetch(`${host}/api/v1/definition/${word}`, {
+      method: 'PATCH',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ definition })
+      })
+    const resText = await res.json()
+    feedback.innerHTML = `Message: ${resText.message}<br>Entry:${JSON.stringify(resText.entry)}<br>Total:${resText.total}`
+    patchDiv.style.display = "none"
+
+  }catch(error){
+    feedback.innerHTML = `Error: ${error}`
+  } 
+}
+
+function declinePatchReq(){
+  document.getElementById("storeForm").reset();
+  feedback.innerHTML = 'Your word is duplicated and the definition is not being updated.'
+  patchDiv.style.display = "none"
+
+}
+

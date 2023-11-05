@@ -106,8 +106,8 @@ app.patch("/api/v1/definition/:word", async(req, res) => {
     where word = '${word}'`
     const {rows} = await db.query(`SELECT COUNT(*) FROM dictionary`)
     const total = rows[0].count
-    const {affectedRows} = await db.query(sql)
-    if(affectedRows === 1){
+    const {rowCount} = await db.query(sql)
+    if(rowCount === 1){
       res.status(201).json({"message": "Update successful", entry, total})
     } else{
       res.status(404).json({"message": "Entry Not Found", "error": `The word ${word} does not exist in the dictionary.`, entry, total})
@@ -129,7 +129,7 @@ app.delete("/api/v1/definition/:word", async(req, res) => {
     const result = await db.query(sql)
     const {rows} = await db.query('SELECT COUNT(*) FROM dictionary')
     const total = parseInt(rows[0].count)
-    if (result.affectedRows === 1){
+    if (result.rowCount === 1){
       res.status(201).json({"message": "Delete successful", entry, total})
     } else{
       res.status(404).json({"message": "Entry Not Found", "error": `The word ${word} does not exist in the dictionary.`, entry, total})
