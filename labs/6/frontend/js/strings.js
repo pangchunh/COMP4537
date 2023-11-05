@@ -3,3 +3,5 @@ document.getElementById('searchTitle').innerHTML = "Dictionary - Search Definiti
 document.getElementById('searchHeader').innerHTML = "Search Definition"
 document.getElementById('searchWordLabel').innerHTML = "Search Word:"
 document.getElementById('submitButton').innerHTML = "Search"
+
+

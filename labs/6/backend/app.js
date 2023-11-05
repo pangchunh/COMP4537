@@ -35,11 +35,11 @@ app.get("/api/v1/definition/:word", async (req, res) => {
     if (rows.length < 1) {
       res.status(404).json({"error": "Entry Not Found", "message": `The word ${word} does not exist in the dictionary.`, entry, total})
     } else {
-      const defintion = rows[0].definition
+      const definition = rows[0].definition
       res.status(200).json({
         "message": "Definition retrived",
         entry,
-        defintion,
+        definition,
         total
       })
     }
@@ -123,7 +123,7 @@ app.delete("/api/v1/definition/:word", async(req, res) => {
   const word = req.params.word;
   const entry = {word}
   const sql = `DELETE FROM dictionary 
-  WHERE word = ${word}`
+  WHERE word = '${word}'`
 
   try {
     const result = await db.query(sql)

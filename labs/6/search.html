@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/labs/6/frontend/css/frontend.css">
     <title id="searchTitle"></title>
 </head>
 <body>
@@ -12,7 +13,14 @@
         <input type="text" id="searchWord" required><br><br>
         <button id="submitButton" type="submit"></button>
     </form>
+    <br>
     <div id="result"></div>
+    <br>
+    <div id="deleteEntryDiv">
+        <div id="deletePrompt"></div><br>
+        <button id="confirmDelete">Yes</button>
+        <button id="denyDelete">No</button>
+    </div>
 
     <script src="./frontend/js/search.js" type="module"></script>
     <script src="./frontend/js/strings.js" type="module"></script>
