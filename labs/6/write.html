@@ -9,27 +9,29 @@
 </head>
 
 <body>
-    <h1>Create and Store Definition</h1>
+    <h1 id="writeHeader"></h1>
     <form id="storeForm">
-        <label for="word">Word:</label>
+        <label for="word" id="wordLabel"></label>
         <input type="text" id="word" required><br><br>
-        <label for="definition">Definition:</label>
+        <label for="definition" id="definitionLabel"></label>
         <textarea id="definition" required></textarea><br><br>
         <select names="wordLanguage" id="wordLanguage">
 
         </select><br><br>
         <select names="definitionLanguage" id="definitionLanguage"></select><br><br>
-        <button type="submit">Submit</button><br><br>
+        <button type="submit" id="submitBtn"></button><br><br>
     </form>
 
     <div id="patchDiv">
         <div id="patchMessage"></div>
-        <button id="confirmPatch">Yes</button><br>
-        <button id="declinePatch">No</button><br>
+        <button id="confirmPatch"></button><br>
+        <button id="declinePatch"></button><br>
     </div>
     <div id="feedback"></div>
 
     <script src="./frontend/js/write.js" type="module"></script>
+    <script src="./frontend/string/write.js" type="module"></script>
+
 </body>
 
 </html>

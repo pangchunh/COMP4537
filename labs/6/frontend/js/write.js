@@ -1,5 +1,5 @@
 
-const host = 'http://localhost:3000'
+const host = 'https://chuncody-lab6.onrender.com'
 
 loadPage()
 await loadLanguages()

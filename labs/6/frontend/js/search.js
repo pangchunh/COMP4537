@@ -1,7 +1,5 @@
 
-const host = 'http://localhost:3000'
-
-
+const host = 'https://chuncody-lab6.onrender.com'
 
 const searchForm = document.getElementById('searchForm');
 const result = document.getElementById('result');
@@ -38,7 +36,7 @@ async function deleteEntry(){
       method: 'DELETE',
       })
     const resText = await res.json()
-    result.innerHTML = `Message: ${resText.message}<br>Entry:${JSON.stringify(resText.entry)}<br>Total:${resText.total}`
+    result.innerHTML = `Message: ${resText.message}<br>Entry: ${JSON.stringify(resText.entry)}<br>Total: ${resText.total}`
     deleteEntryDiv.style.display = "none"
     document.getElementById("searchForm").reset();
 
