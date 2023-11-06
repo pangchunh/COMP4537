@@ -29,10 +29,10 @@ function loadPage() {
       if (res.status === 409) {
         displayPatchDiv(resText.message)
       }
-      feedback.innerHTML = `Message: ${resText.message}<br>Entry: ${JSON.stringify(resText.entry)}<br>Total: ${resText.total}`
+      feedback.innerHTML = `Status: ${res.status}<br>Message: ${resText.message}<br>Entry: ${JSON.stringify(resText.entry)}<br>Total: ${resText.total}`
 
     } catch (e) {
-      feedback.textContent = `Error: ${e.message}`
+      feedback.textContent = `Status: ${res.status}<br>Error: ${e.message}`
     }
   });
 
@@ -87,7 +87,7 @@ async function submitPatchReq() {
       body: JSON.stringify({ definition })
     })
     const resText = await res.json()
-    feedback.innerHTML = `Message: ${resText.message}<br>Entry:${JSON.stringify(resText.entry)}<br>Total:${resText.total}`
+    feedback.innerHTML = `Status: ${res.status}<br>Message: ${resText.message}<br>Entry: ${JSON.stringify(resText.entry)}<br>Total: ${resText.total}`
     patchDiv.style.display = "none"
     document.getElementById('storeForm').reset()
 

@@ -14,10 +14,10 @@ searchForm.addEventListener('submit', async (e) => {
     const res = await fetch(`${host}/api/v1/definition/${searchWord}`)
     if (res.status == 404) {
       const err = await res.json()
-      throw new Error(`${err.error}<br>Message: ${err.message}<br>Entry: ${err.entry.word}<br>Total: ${err.total}`)
+      throw new Error(`Status: ${res.status}<br>${err.error}<br>Message: ${err.message}<br>Entry: ${err.entry.word}<br>Total: ${err.total}`)
     }
     const data = await res.json()
-    result.innerHTML = `Word: ${searchWord}<br>Definition: ${data.definition}<br> Entry: ${data.entry.word}<br>Total: ${data.total}`;
+    result.innerHTML = `Status: ${res.status}<br>Word: ${searchWord}<br>Definition: ${data.definition}<br> Entry: ${data.entry.word}<br>Total: ${data.total}`;
     const prompt = document.getElementById('deletePrompt')
     prompt.innerHTML = `Do you want to delete ${searchWord} from the dictionary?`
     deleteEntryDiv.style.display = "block"
@@ -36,7 +36,7 @@ async function deleteEntry(){
       method: 'DELETE',
       })
     const resText = await res.json()
-    result.innerHTML = `Message: ${resText.message}<br>Entry: ${JSON.stringify(resText.entry)}<br>Total: ${resText.total}`
+    result.innerHTML = `Status: ${res.status}<br>Message: ${resText.message}<br>Entry: ${JSON.stringify(resText.entry)}<br>Total: ${resText.total}`
     deleteEntryDiv.style.display = "none"
     document.getElementById("searchForm").reset();
 
