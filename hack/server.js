@@ -6,7 +6,7 @@ const server = http.createServer((req, res) => {
   // if you run the client from sth like file:///C:/nodejs/10httonlyCookie1/index.html
   // it would mean HTML file is being served via the file:// protocol directly from your filesystem rather than over HTTP or HTTPS.
   console.log('Request origin:', req.headers.origin);
-  res.setHeader('Access-Control-Allow-Origin', 'https://chun-comp4537.onrender.com/');// Adjust the port if necessary
+  res.setHeader('Access-Control-Allow-Origin', 'https://chunswork.onrender.com');// Adjust the port if necessary
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
@@ -26,6 +26,7 @@ const server = http.createServer((req, res) => {
     req.on('end', () => {
       try {
         const { username, password } = JSON.parse(body); // Parse the JSON body
+        console.log(username, password)
         if (username === 'admin' && password === '111') {
           res.writeHead(200, {
             'Set-Cookie': 'token=123456; HttpOnly; ',
@@ -59,5 +60,5 @@ const server = http.createServer((req, res) => {
   }
 });
 server.listen(PORT, () => {
-  console.log('Server running on port 3000');
+  console.log(`Server running on port ${PORT}`);
 });//**  Generated mostly by chatGPT ver. 4 **/
