@@ -7,6 +7,8 @@ const server = http.createServer((req, res) => {
   // it would mean HTML file is being served via the file:// protocol directly from your filesystem rather than over HTTP or HTTPS.
   console.log('Request origin:', req.headers.origin);
   res.setHeader('Access-Control-Allow-Origin', 'https://chunswork.onrender.com');// Adjust the port if necessary
+  // res.setHeader('Access-Control-Allow-Origin', 'http://127.0.0.1:5500');// Adjust the port if necessary
+
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
@@ -27,9 +29,9 @@ const server = http.createServer((req, res) => {
       try {
         const { username, password } = JSON.parse(body); // Parse the JSON body
         console.log(username, password)
-        if (username === 'admin' && password === '111') {
+        if (username === 'admin' && password === 'br!9rr') {
           res.writeHead(200, {
-            'Set-Cookie': 'token=123456; HttpOnly; ',
+            'Set-Cookie': 'token=123456; HttpOnly; maxAge=60 Path=/; Domain=localhost; Secure',
             'Content-Type': 'application/json',
           });
           res.end(JSON.stringify({ message: 'Logged in successfully' }));
@@ -48,7 +50,7 @@ const server = http.createServer((req, res) => {
     const cookie = req.headers.cookie;
     if (cookie && cookie.includes('token=123456')) {
       res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ message: 'You are logged in, here is something.' }));
+      res.end(JSON.stringify({ message: 'You are logged in, here is our treasure: BRRRRR.' }));
     } else {
       res.writeHead(401, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ message: 'Unauthorized: You are not logged in.' }));
