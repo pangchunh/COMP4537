@@ -31,7 +31,7 @@ const server = http.createServer((req, res) => {
         console.log(username, password)
         if (username === 'admin' && password === 'br!9rr') {
           res.writeHead(200, {
-            'Set-Cookie': 'token=123456; HttpOnly; maxAge=60 Path=/; Domain=localhost; Secure',
+            'Set-Cookie': 'token=123456; HttpOnly',
             'Content-Type': 'application/json',
           });
           res.end(JSON.stringify({ message: 'Logged in successfully' }));

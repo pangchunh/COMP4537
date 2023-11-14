@@ -3,12 +3,12 @@ const http = require('http')
 const url = require('url')
 require('dotenv').config()
 
-const createTableScript = `CREATE TABLE IF NOT EXISTS patient (
+const createTableScript = `BEGIN;CREATE TABLE IF NOT EXISTS patient (
   patientid SERIAL PRIMARY KEY,
   name varchar(100),
-  dateOfBirth date)`
-
-db.createTable(createTableScript)
+  dateOfBirth date)
+  GRANT SELECT, INSERT, ON TABLE patient TO lab5_user;
+  COMMIT;`
 
 
 async function testOtherOps() {
